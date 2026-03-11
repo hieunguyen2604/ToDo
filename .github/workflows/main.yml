@@ -36,13 +36,16 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Set lower case repo name
+      run: echo "REPO_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
     - name: Build and push Backend Image
       uses: docker/build-push-action@v5
       with:
         context: .
         file: docker/Dockerfile.backend
         push: true
-        tags: ghcr.io/${{ github.repository }}/todo-api:latest
+        tags: ghcr.io/${{ env.REPO_NAME }}/todo-api:latest
 
     - name: Build and push Frontend Image
       uses: docker/build-push-action@v5
@@ -50,4 +53,4 @@ jobs:
         context: .
         file: docker/Dockerfile.frontend
         push: true
-        tags: ghcr.io/${{ github.repository }}/todo-frontend:latest
+        tags: ghcr.io/${{ env.REPO_NAME }}/todo-frontend:latest

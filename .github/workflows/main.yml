@@ -1,0 +1,53 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Install dependencies and build .NET
+      run: cd backend && dotnet build
+
+    - name: Install dependencies and build React
+      run: cd frontend && npm install && npm run build
+
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and push Backend Image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: docker/Dockerfile.backend
+        push: true
+        tags: ghcr.io/${{ github.repository }}/todo-api:latest
+
+    - name: Build and push Frontend Image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: docker/Dockerfile.frontend
+        push: true
+        tags: ghcr.io/${{ github.repository }}/todo-frontend:latest

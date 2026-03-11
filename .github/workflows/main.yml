@@ -7,7 +7,6 @@ on:
     branches: [ "main" ]
 
 jobs:
-jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
@@ -42,7 +41,6 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-
 
     - name: Build and push Backend Image
       uses: docker/build-push-action@v5

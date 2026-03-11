@@ -7,11 +7,18 @@ on:
     branches: [ "main" ]
 
 jobs:
+jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     
     steps:
     - uses: actions/checkout@v4
+
+    - name: Set lower case owner name
+      run: echo "OWNER=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
@@ -36,8 +43,6 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Set lower case repo name
-      run: echo "REPO_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
     - name: Build and push Backend Image
       uses: docker/build-push-action@v5

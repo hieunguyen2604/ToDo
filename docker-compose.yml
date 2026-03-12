@@ -1,8 +1,6 @@
 services:
   api:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.backend
+    image: ghcr.io/hieunguyen2604/todo-api:latest
     environment:
       - DATABASE_URL=Host=db;Port=5432;Database=todo_db;Username=postgres;Password=postgres
       - ASPNETCORE_ENVIRONMENT=Development
@@ -11,9 +9,7 @@ services:
         condition: service_healthy
 
   frontend:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.frontend
+    image: ghcr.io/hieunguyen2604/todo-frontend:latest
     environment:
       - VITE_API_URL=/api
     ports:

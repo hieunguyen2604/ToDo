@@ -69,7 +69,7 @@ function App() {
   return (
     <div style={{ padding: '2rem' }}>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-        <h1>Task Management</h1>
+        <h1>Task Management (CI/CD Enabled)</h1>
         <button onClick={() => { authService.logout(); setIsLoggedIn(false); }} style={{ width: 'auto', padding: '0.5rem 1rem' }}>Logout</button>
       </header>
 

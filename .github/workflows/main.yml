@@ -61,3 +61,23 @@ jobs:
         push: true
         tags: ghcr.io/${{ env.OWNER }}/todo-frontend:latest
 
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Deploy to Local Machine via Ngrok SSH
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        port: ${{ secrets.SERVER_PORT }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        script: |
+          cd ~/Source/ToDo
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          docker-compose pull
+          docker-compose up -d
+          docker image prune -f
+

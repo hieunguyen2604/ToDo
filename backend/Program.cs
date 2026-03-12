@@ -18,6 +18,14 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApiDbContext>(options =>
     options.UseNpgsql(connectionString));
 
+// Redis Configuration
+var redisConnectionString = builder.Configuration["REDIS_URL"] ?? "localhost:6379";
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = redisConnectionString;
+    options.InstanceName = "ToDo_";
+});
+
 // Simple JWT Auth Configuration (For demo purposes)
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

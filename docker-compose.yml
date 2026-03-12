@@ -3,10 +3,30 @@ services:
     image: ghcr.io/hieunguyen2604/todo-api:latest
     environment:
       - DATABASE_URL=Host=db;Port=5432;Database=todo_db;Username=postgres;Password=postgres
+      - REDIS_URL=redis:6379
       - ASPNETCORE_ENVIRONMENT=Development
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_started
+
+  api-2:
+    image: ghcr.io/hieunguyen2604/todo-api:latest
+    environment:
+      - DATABASE_URL=Host=db;Port=5432;Database=todo_db;Username=postgres;Password=postgres
+      - REDIS_URL=redis:6379
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
 
   frontend:
     image: ghcr.io/hieunguyen2604/todo-frontend:latest
@@ -16,6 +36,7 @@ services:
       - "80:80"
     depends_on:
       - api
+      - api-2
 
   db:
     image: postgres:15-alpine

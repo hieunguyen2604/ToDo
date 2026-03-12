@@ -76,9 +76,9 @@ function App() {
       <form className="card" style={{ maxWidth: 'none', marginBottom: '2rem' }} onSubmit={handleCreateTask}>
         <h3>Create New Task</h3>
         <div style={{ display: 'flex', gap: '1rem' }}>
-          <input placeholder="Title" value={newTask.title} onChange={e => setNewTask({...newTask, title: e.target.value})} required />
-          <input placeholder="Description" value={newTask.description} onChange={e => setNewTask({...newTask, description: e.target.value})} />
-          <select value={newTask.status} onChange={e => setNewTask({...newTask, status: parseInt(e.target.value)})}>
+          <input placeholder="Title" value={newTask.title} onChange={e => setNewTask({ ...newTask, title: e.target.value })} required />
+          <input placeholder="Description" value={newTask.description} onChange={e => setNewTask({ ...newTask, description: e.target.value })} />
+          <select value={newTask.status} onChange={e => setNewTask({ ...newTask, status: parseInt(e.target.value) })}>
             <option value={0}>Todo</option>
             <option value={1}>In Progress</option>
             <option value={2}>Completed</option>
@@ -97,8 +97,8 @@ function App() {
             </div>
             <h3>{task.title}</h3>
             <p style={{ color: '#94a3b8' }}>{task.description}</p>
-            <button 
-              onClick={() => handleDelete(task.id)} 
+            <button
+              onClick={() => handleDelete(task.id)}
               style={{ background: '#ef4444', marginTop: '1rem', width: 'auto', padding: '0.5rem' }}
             >
               <Trash2 size={16} />

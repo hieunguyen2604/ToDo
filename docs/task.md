@@ -1,0 +1,40 @@
+# Task: Design and Generate a Production-Ready ToDo Project with CI/CD
+
+- [x] Stage 1: Initial Planning and Structure [x]
+    - [x] Create task.md
+    - [x] Create implementation_plan.md
+    - [x] Set up project directory structure
+- [x] Stage 2: Backend Implementation (.NET 8) [x]
+    - [x] Initialize ASP.NET Core Web API
+    - [x] Implement Task entity and DbContext
+    - [x] Implement TaskController (CRUD)
+    - [x] Implement Simple JWT Authentication (Configuration)
+    - [x] Configure PostgreSQL
+- [x] Stage 3: Frontend Implementation (React Vite) [x]
+    - [x] Initialize React project with Vite
+    - [x] Set up Axios and API services
+    - [x] Create Login Page
+    - [x] Create Task Management Pages (List, Create, Update, Delete)
+- [x] Stage 4: Dockerization [x]
+    - [x] Create Backend Dockerfile
+    - [x] Create Frontend Dockerfile
+    - [x] Create docker-compose.yml for dev/production
+- [x] Stage 5: CI/CD and Deployment [x]
+    - [x] Create Nginx configuration
+    - [x] Create GitHub Actions workflow
+    - [x] Create Deployment Guide and Best Practices documentation
+- [x] Stage 6: Final Verification [x]
+    - [x] Validate project structure and configurations
+    - [x] Create walkthrough.md
+- [x] Stage 7: Automated CD via SSH [x]
+    - [x] Update main.yml with deploy job
+    - [x] Add instructions for GitHub Secrets setup (completed concept)
+- [x] Stage 8: Ngrok Exposition [x]
+    - [x] Install and authenticate ngrok
+    - [x] Expose local port 80 (Web)
+    - [x] Expose local port 22 (SSH for CD learning)
+- [ ] Stage 9: Scaling and Shared State (Redis) [/]
+    - [ ] Add Redis container to docker-compose.yml
+    - [ ] Add second API instance (api-2)
+    - [ ] Update Nginx as a Load Balancer
+    - [ ] Integrate IDistributedCache (Redis) in .NET API

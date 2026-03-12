@@ -1,7 +1,5 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ToDo.Api.Data;
-using ToDo.Api.Models;
+using Microsoft.Extensions.Caching.Distributed;
+using System.Text.Json;
 
 namespace ToDo.Api.Controllers
 {
@@ -10,16 +8,29 @@ namespace ToDo.Api.Controllers
     public class TasksController : ControllerBase
     {
         private readonly ApiDbContext _context;
+        private readonly IDistributedCache _cache;
+        private const string CacheKey = "TaskList";
 
-        public TasksController(ApiDbContext context)
+        public TasksController(ApiDbContext context, IDistributedCache cache)
         {
             _context = context;
+            _cache = cache;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TaskItem>>> GetTasks()
         {
-            return await _context.Tasks.ToListAsync();
+            var cachedTasks = await _cache.GetStringAsync(CacheKey);
+            if (!string.IsNullOrEmpty(cachedTasks))
+            {
+                return JsonSerializer.Deserialize<List<TaskItem>>(cachedTasks)!;
+            }
+
+            var tasks = await _context.Tasks.ToListAsync();
+            var options = new DistributedCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(5));
+            await _cache.SetStringAsync(CacheKey, JsonSerializer.Serialize(tasks), options);
+            
+            return tasks;
         }
 
         [HttpGet("{id}")]
@@ -36,6 +47,7 @@ namespace ToDo.Api.Controllers
             task.CreatedAt = DateTime.UtcNow;
             _context.Tasks.Add(task);
             await _context.SaveChangesAsync();
+            await _cache.RemoveAsync(CacheKey); // Clear cache on change
             return CreatedAtAction(nameof(GetTask), new { id = task.Id }, task);
         }
 
@@ -49,6 +61,7 @@ namespace ToDo.Api.Controllers
             try
             {
                 await _context.SaveChangesAsync();
+                await _cache.RemoveAsync(CacheKey);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -67,6 +80,7 @@ namespace ToDo.Api.Controllers
 
             _context.Tasks.Remove(task);
             await _context.SaveChangesAsync();
+            await _cache.RemoveAsync(CacheKey);
 
             return NoContent();
         }
